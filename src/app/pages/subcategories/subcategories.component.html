@@ -1,0 +1,73 @@
+<dx-data-grid [showColumnLines]="true" [showRowLines]="true" [dataSource]="dataSource" [showBorders]="true" [rowAlternationEnabled]="true"
+    [columnAutoWidth]="true" keyExpr="Id">
+    <dxi-column dataField="Id" [width]="100" ></dxi-column>
+    <dxi-column dataField="FabricType" [width]="120"></dxi-column>
+    <dxi-column dataField="Color" [width]="100"></dxi-column>
+    <dxi-column dataField="Price" [width]="100"></dxi-column>
+    <dxi-column dataField="CareInstructions" [hidingPriority]="2"></dxi-column>
+    <dxi-column dataField="DateCreated" [hidingPriority]="1"></dxi-column>
+    <dxi-column dataField="CreatedBy" [hidingPriority]="0"></dxi-column>
+    <dxi-column [width]="100" [allowFiltering]="false" [allowSorting]="false" cellTemplate="actions"
+        caption="Actions"></dxi-column>
+    <div *dxTemplate="let data of 'actions'" [width]="80">
+        <button  type="button"class="gridbutton" title="Edit" (click)="edit(data.data)">
+            <i class="bx bx-edit" style="color:#3256a8"></i>
+        </button>
+        <button type="button" class="gridbutton" title="Delete" (click)="delete(data.data)">
+            <i class="bx bx-trash" style="color: red"></i>
+        </button>
+    </div>
+</dx-data-grid>
+<ng-template #centerDataModal class="modal fade modal-lg" tabindex="-1">
+    <div class="modal-header">
+        <h5 class="modal-title">Sub-Category Entry</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="hideModal()"></button>
+    </div>
+    <form class="needs-validation" (ngSubmit)="validSubmitSubCategory()" [formGroup]="validationform">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-4">
+                    <label for="FabricType">Fabric Type:</label><span style="color: red;">*</span>
+                    <input type="text" formControlName="FabricType" class="form-control"
+                        [ngClass]="{'is-invalid': submit2 && form2.FabricType.errors}">
+                    <div *ngIf="submit2 && form2.FabricType.errors" class="invalid-feedback">
+                        <span *ngIf="form2.FabricType.errors.required">Please provide a valid
+                          Fabric Type.</span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <label for="Color">Color:</label><span style="color: red;">*</span>
+                    <input type="text" formControlName="Color" class="form-control"
+                        [ngClass]="{'is-invalid': submit2 && form2.Color.errors}">
+                    <div *ngIf="submit2 && form2.Color.errors" class="invalid-feedback">
+                        <span *ngIf="form2.Color.errors.required">Please provide a valid
+                          Color.</span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <label for="Price">Price:</label><span style="color: red;">*</span>
+                    <input type="text" formControlName="Price" class="form-control"
+                        [ngClass]="{'is-invalid': submit2 && form2.Price.errors}">
+                    <div *ngIf="submit2 && form2.Price.errors" class="invalid-feedback">
+                        <span *ngIf="form2.Price.errors.required">Please provide a valid
+                            Price.</span>
+                    </div>
+                </div>
+            </div>
+                <div class="row">
+                <div class="col-lg-12">
+                    <label for="CareInstructions">CareInstructions:</label>
+                    <textarea class="form-control" formControlName="CareInstructions" class="form-control" placeholder="Meta Description" id="CareInstructions" rows="4"></textarea>
+                </div>
+            </div>
+        </div>            
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger waves-effect" data-bs-dismiss="modal"
+                (click)="hideModal()">Close</button>
+            <button class="btn btn-primary waves-effect waves-light" type="submit" class="btn btn-primary w-md"
+                [disabled]="loading">Submit</button>
+        </div>
+    </form>
+  </ng-template>
+  <ngx-loading [show]="loading"></ngx-loading>

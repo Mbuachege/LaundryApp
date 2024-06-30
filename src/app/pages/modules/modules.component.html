@@ -1,0 +1,149 @@
+<div style="margin-top: 15px;">
+    <button class="btn btn-primary btn-label waves-light" (click)="centerModal(centerDataModal)"><i
+            class="fas fa-plus label-icon" style="color:white"></i> Add Module</button>
+</div>
+<dx-data-grid id="gridContainer" #grid [dataSource]="dataSource" keyExpr="id" [showColumnLines]="true"
+    [showRowLines]="true" [showBorders]="true" [rowAlternationEnabled]="true"
+    (onSelectionChanged)="Loadsubmodules($event)">
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxo-selection mode="single"></dxo-selection>
+    <dxo-search-panel [visible]="true" [width]="300" placeholder="Search..."></dxo-search-panel>
+    <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+    <dxo-paging [pageSize]="10"> </dxo-paging>
+    <dxo-pager [visible]="true" [allowedPageSizes]="[10,20,30,40,50]" [displayMode]="'full'"
+        [showPageSizeSelector]="true" [showInfo]="true" [showNavigationButtons]="true">
+    </dxo-pager>
+    <dxi-column dataField="id" [width]="100" caption="Module Id"></dxi-column>
+    <dxi-column dataField="label"></dxi-column>
+    <dxi-column dataField="icon" [hidingPriority]="5"></dxi-column>
+    <dxi-column dataField="link" [hidingPriority]="4"></dxi-column>
+    <dxi-column dataField="isTitle" [hidingPriority]="4"></dxi-column>
+    <dxi-column dataField="DateCreated" [hidingPriority]="3"></dxi-column>
+    <dxi-column dataField="CreatedBy" [hidingPriority]="2"></dxi-column>
+    <dxi-column dataField="DateModified" dataType="date" [hidingPriority]="1"></dxi-column>
+    <dxi-column dataField="ModifiedBy" [hidingPriority]="0"></dxi-column>
+    <dxo-master-detail [enabled]="false" template="detail"></dxo-master-detail>
+    <dxi-column [width]="100" [allowFiltering]="false" [allowSorting]="false" cellTemplate="actions"></dxi-column>
+    <div *dxTemplate="let data of 'actions'" [width]="80">
+        <button class="gridbutton" title="Add Sub Module" (click)="addSubmodule(data.data)">
+            <i class="bx bxs-add-to-queue" style="color:#3256a8"></i>
+        </button>
+        <button class="gridbutton" title="Edit" (click)="editmodule(data.data)">
+            <i class="bx bx-edit" style="color:#3256a8"></i>
+        </button>
+        <button class="gridbutton" title="Delete" (click)="Delete(data.data)">
+            <i class="bx bx-trash" style="color: red"></i>
+        </button>
+    </div>
+    <div *dxTemplate="let module of 'detail'">
+        <app-sub-modules [data]="submodulesSource" [key]="module.key"></app-sub-modules>
+    </div>
+</dx-data-grid>
+
+<ng-template #centerDataModal class="modal fade modal-lg" tabindex="-1">
+
+    <div class="modal-header">
+        <h5 class="modal-title">Module Entry</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="modalRef?.hide()"></button>
+    </div>
+    <form class="needs-validation" (ngSubmit)="validSubmit()" [formGroup]="validationform">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="basicpill-label-input">Module Label:</label>
+                    <input type="text" class="form-control" id="label" formControlName="label"
+                        [ngClass]="{'is-invalid': submit && form.label.errors}">
+                    <div *ngIf="submit && form.label.errors" class="invalid-feedback">
+                        <span *ngIf="form.label.errors.required">Please provide a valid label.</span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label for="basicpill-link-input">Icon:</label>
+                    <input type="text" class="form-control" id="icon" formControlName="icon">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                    <label for="basicpill-label-input">Link:</label>
+                    <input type="text" class="form-control" id="link" formControlName="link"
+                        [ngClass]="{'is-invalid': submit && form.link.errors}">
+                    <div *ngIf="submit && form.link.errors" class="invalid-feedback">
+                        <span *ngIf="form.link.errors.required">Please provide a valid link.</span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-check mt-4">
+                        <input class="form-check-input" type="checkbox" id="isTitle" formControlName="isTitle">
+                        <label class="form-check-label" for="isTitle">
+                            isTitle
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect" data-bs-dismiss="modal"
+                    (click)="modalRef?.hide()">Close</button>
+                <button class="btn btn-primary waves-effect waves-light" type="submit" class="btn btn-primary w-md"
+                    [disabled]="loading">Save
+                    Module</button>
+            </div>
+        </div>
+
+    </form>
+
+</ng-template>
+<ng-template #submoduleDataModal class="modal fade modal-lg" tabindex="-1">
+
+    <div class="modal-header">
+        <h5 class="modal-title">Sub-Module Entry</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="modalRef?.hide()"></button>
+    </div>
+    <form class="needs-validation" (ngSubmit)="submoduleSubmit()" [formGroup]="submodulesform">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="basicpill-label-input">Sub-Module Label:</label>
+                    <input type="text" class="form-control" id="label" formControlName="label"
+                        [ngClass]="{'is-invalid': submitsubmodule && submoduleform.label.errors}">
+                    <div *ngIf="submitsubmodule && submoduleform.label.errors" class="invalid-feedback">
+                        <span *ngIf="submoduleform.label.errors.required">Please provide a valid label.</span>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label for="basicpill-icon-input">Icon:</label>
+                    <input type="text" class="form-control" id="icon" formControlName="icon">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6">
+                    <label for="basicpill-link-input">Link:</label>
+                    <input type="text" class="form-control" id="link" formControlName="link"
+                        [ngClass]="{'is-invalid': submitsubmodule && submoduleform.link.errors}">
+                    <div *ngIf="submitsubmodule && submoduleform.link.errors" class="invalid-feedback">
+                        <span *ngIf="submoduleform.link.errors.required">Please provide a valid link.</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-check mt-4">
+                        <input class="form-check-input" type="checkbox" id="isTitle" formControlName="isTitle">
+                        <label class="form-check-label" for="isTitle">
+                            isTitle
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger waves-effect" data-bs-dismiss="modal"
+                (click)="modalRef?.hide()">Close</button>
+            <button class="btn btn-primary waves-effect waves-light" type="submit" class="btn btn-primary w-md"
+                [disabled]="loading">Save
+                Sub-Module</button>
+        </div>
+
+    </form>
+
+</ng-template>
+<ngx-loading [show]="loading"></ngx-loading>

@@ -1,0 +1,91 @@
+<div class="container-fluid">
+
+  <!-- start page title -->
+  <app-page-title title="Add Process/status" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+  <!-- end page title -->
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <form class="needs-validation" [formGroup]="processForm" (ngSubmit)="validSubmit()">
+            <div class="row">
+              <div class="col-sm-3">
+                <div class="mb-3">
+                  <label for="processname">Status/Process Name</label>
+                  <input id="processname" type="text" placeholder="Status/Process name" class="form-control"
+                    formControlName="processname" [ngClass]="{'is-invalid': submit && form.processname.errors}">
+                  <div *ngIf="submit && form.processname.errors" class="invalid-feedback">
+                    <span *ngIf="form.processname.errors.required">Status/Process Name is required.</span>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="Duration">Duration</label>
+                  <div class="input-group">
+                    <input id="Duration" name="Duration" placeholder="0" type="text"
+                      class="form-control" formControlName="Duration"
+                      [ngClass]="{'is-invalid': submit && form.Duration.errors}">
+                    <div *ngIf="submit && form.Duration.errors" class="invalid-feedback">
+                      <span *ngIf="form.Duration.errors.required">Duration is required.</span>
+                    </div>
+                    <span class="input-group-text"><label>Days</label></span>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <div class="d-flex flex-wrap gap-2 mt-2">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary">Cancel</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-9">
+                <!-- Table data -->
+                <div class="row mb-2">
+                  <div class="col-sm-8"></div>
+                  <div class="col-sm-4">
+                    <div class="search-box text-sm-end">
+                      <div class="position-relative">
+                        <input type="text" class="form-control" autocomplete="off" id="searchTableList"
+                          placeholder="Search...">
+                        <i class="bx bx-search-alt search-icon"></i>
+                      </div>
+                    </div><!-- end col-->
+                  </div>
+                </div>
+                <div class="table-responsive mb-0">
+                  <table class="table align-middle table-nowrap dt-responsive nowrap w-100" id="order-list">
+                    <thead class="table-light">
+                      <tr>
+                        <th class="align-middle">Id</th>
+                        <th class="align-middle">Status/Process</th>
+                        <th class="align-middle">Duration(Days)</th>
+                        <th class="align-middle">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let item of dataSource">
+                        <td>
+                          <a href="javascript: void(0);" class="text-body fw-bold">{{item.Id}}</a>
+                        </td>
+                        <td>{{item.Process}}</td>
+                        <td>{{item.Duration}}</td>
+                        <td>
+                          <div class="d-flex gap-3">
+                            <a href="javascript:void(0);" class="text-success" (click)="GetProcessById(item)"><i
+                                class="mdi mdi-pencil font-size-18"></i></a>
+                            <a href="javascript:void(0);" class="text-danger" (click)="Delete(item)"><i
+                                class="mdi mdi-delete font-size-18"></i></a>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <!-- end table -->
+              </div>
+            </div>
+
+          </form>
+        </div>
+      </div>
+      <ngx-loading [show]="loading"></ngx-loading>

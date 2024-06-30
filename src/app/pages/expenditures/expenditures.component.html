@@ -1,0 +1,108 @@
+<div class="container-fluid">
+    <app-page-title title="Expenditures" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+
+    <div class="col-auto">
+        <button class="btn btn-primary btn-label waves-light" (click)="centerModal(centerDataModal)"><i
+                class="fas fa-plus label-icon" style="color:white"></i> Add Expenditure</button>
+    </div>
+    <div class="row">
+        <dx-data-grid id="gridContainer" #grid [dataSource]="dataSource" keyExpr="Id" [showColumnLines]="true"
+            [showRowLines]="true" [showBorders]="true" [rowAlternationEnabled]="true">
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-search-panel [visible]="true" [width]="300" placeholder="Search..."></dxo-search-panel>
+            <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+            <dxo-paging [pageSize]="10"> </dxo-paging>
+            <dxo-pager [visible]="true" [allowedPageSizes]="[10,20,30,40,50]" [displayMode]="'full'"
+                [showPageSizeSelector]="true" [showInfo]="true" [showNavigationButtons]="true">
+            </dxo-pager>
+            <dxi-column dataField="Id" [width]="100"></dxi-column>
+            <dxi-column dataField="CategoryName"></dxi-column>
+            <dxi-column dataField="Amount"></dxi-column>
+            <dxi-column dataField="Reference"></dxi-column>
+            <dxi-column dataField="Date" [width]="150"></dxi-column>
+            <dxi-column dataField="Description" [width]="180" [hidingPriority]="1"></dxi-column>
+            <dxi-column dataField="CreatedBy" [hidingPriority]="0"></dxi-column>
+            <dxi-column [width]="100" [allowFiltering]="false" [allowSorting]="false"
+                cellTemplate="actions"></dxi-column>
+            <div *dxTemplate="let data of 'actions'">
+                <button class="gridbutton" title="Edit" (click)="edit(data.data)">
+                    <i class="bx bx-edit" style="color:#3256a8"></i>
+                </button>
+                <button class="gridbutton" title="Delete" (click)="Delete(data.data)">
+                    <i class="bx bx-trash" style="color: red"></i>
+                </button>
+            </div>
+        </dx-data-grid>
+    </div>
+    <ng-template #centerDataModal class="modal fade modal-lg" tabindex="-1">
+        <div class="modal-header">
+            <h5 class="modal-title">Expenditure Entry</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                (click)="hideModal()"></button>
+        </div>
+        <form class="needs-validation" (ngSubmit)="validSubmit()" [formGroup]="validationform">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <label for="CategoryName">Expenditure Category:</label><span
+                            style="color: red;">*</span>
+                        <ng-select [items]="CategoriesSource" bindLabel="Name"
+                            bindValue="Id" formControlName="CategoryName" id="CategoryName"
+                            [ngClass]="{'ng-invalid': submit && form.CategoryName.errors}"
+                            (change)="onCategoryChange($event)">
+                        </ng-select>
+                        <div *ngIf="submit && form.CategoryName.errors"
+                            class="invalid-feedback">
+                            <span *ngIf="form.CategoryName.errors.required">Please
+                                provide a
+                                valid
+                                Category.</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label for="Amount">Amount:</label>
+                        <input type="text" formControlName="Amount" class="form-control"
+                            [ngClass]="{'is-invalid': submit && form.Amount.errors}">
+                        <div *ngIf="submit && form.Amount.errors" class="invalid-feedback">
+                            <span *ngIf="form.Amount.errors.required">Please provide a valid
+                                Amount.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">  
+                    <div class="col-lg-8">
+                        <label for="paymentReference">Payment Reference:</label>
+                        <input type="text" formControlName="paymentReference" class="form-control">
+                    </div>
+                    <div class="col-lg-4">
+                        <label>Date</label>
+                        <div class="input-group clockpicker">
+                            <input bsDatepicker class="form-control" autoClose="true"
+                                formControlName="Date" placeholder="yyyy-mm-dd"
+                                [maxDate]="maxDate"
+                                [ngClass]="{'is-invalid': submit && form.Date.errors}">
+                            <div *ngIf="submit && form.Date.errors" class="invalid-feedback">
+                                <span *ngIf="form.Date.errors.required">Please provide a valid
+                                    Date.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <label for="Description">Description:</label>
+                        <textarea class="form-control" formControlName="Description" class="form-control" placeholder="Meta Description" id="Description" rows="4"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect" data-bs-dismiss="modal"
+                    (click)="hideModal()">Close</button>
+                <button class="btn btn-primary waves-effect waves-light" type="submit" class="btn btn-primary w-md"
+                    [disabled]="loading">Submit</button>
+            </div>
+        </form>
+    </ng-template>
+    <ngx-loading [show]="loading"></ngx-loading>
+</div>

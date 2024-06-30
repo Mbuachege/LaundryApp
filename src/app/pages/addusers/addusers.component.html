@@ -1,0 +1,117 @@
+<div class="container-fluid">
+    <app-page-title title="Users" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+
+    <div class="col-auto">
+        <button class="btn btn-primary btn-label waves-light" (click)="centerModal(centerDataModal)"><i
+                class="fas fa-plus label-icon" style="color:white"></i> Add User</button>
+    </div>
+    <div class="row mt-3">
+        <dx-data-grid id="gridContainer" #grid [dataSource]="dataSource" keyExpr="Id" [showColumnLines]="true"
+            [showRowLines]="true" [showBorders]="true" [rowAlternationEnabled]="true">
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+            <dxo-search-panel [visible]="true" [width]="300" placeholder="Search..."></dxo-search-panel>
+            <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+            <dxo-paging [pageSize]="10"> </dxo-paging>
+            <dxo-pager [visible]="true" [allowedPageSizes]="[10,20,30,40,50]" [displayMode]="'full'"
+                [showPageSizeSelector]="true" [showInfo]="true" [showNavigationButtons]="true">
+            </dxo-pager>
+            <dxi-column dataField="Id" [width]="100"></dxi-column>
+            <dxi-column dataField="Username"></dxi-column>
+            <dxi-column dataField="FullName"></dxi-column>
+            <dxi-column dataField="UserRole" [hidingPriority]="10"></dxi-column>
+            <dxi-column dataField="Email" [hidingPriority]="9"></dxi-column>
+            <dxi-column dataField="PhoneNumber" [hidingPriority]="7"></dxi-column>
+            <dxi-column dataField="Status" [hidingPriority]="5"></dxi-column>
+            <dxi-column dataField="DateCreated" [hidingPriority]="1"></dxi-column>
+            <dxi-column dataField="CreatedBy" [hidingPriority]="0"></dxi-column>
+            <dxi-column [width]="100" [allowFiltering]="false" [allowSorting]="false"
+                cellTemplate="actions"></dxi-column>
+            <div *dxTemplate="let data of 'actions'">
+                <button class="gridbutton" title="Edit" (click)="edituser(data.data)">
+                    <i class="bx bx-edit" style="color:#3256a8"></i>
+                </button>
+                <button class="gridbutton" title="Reset Password" (click)="resetpassword(data.data)">
+                    <i class="bx bx-reset" style="color: red"></i>
+                </button>
+                <button class="gridbutton" title="Disable" (click)="disableuser(data.data)">
+                    <i class="bx bx-lock" style="color: red"></i>
+                </button>
+            </div>
+        </dx-data-grid>
+    </div>
+</div>
+<ng-template #centerDataModal class="modal fade modal-lg" tabindex="-1">
+    <div class="modal-header">
+        <h5 class="modal-title">Users Entry</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+            (click)="modalRef?.hide()"></button>
+    </div>
+    <form class="needs-validation" (ngSubmit)="validSubmit()" [formGroup]="validationform">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-lg-8">
+                    <label for="Username" class="form-label">Username:</label>
+                    <input type="text" class="form-control" id="Username" formControlName="Username"
+                        [ngClass]="{'is-invalid': submit && form.Username.errors}">
+                    <div *ngIf="submit && form.Username.errors" class="invalid-feedback">
+                        <span *ngIf="form.Username.errors.required">Please provide a
+                            valid Username.</span>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <label for="UserGroup">User Role:</label>
+                    <select id="formrow-UserRole" class="form-select" formControlName="UserRole"
+                        [ngClass]="{'is-invalid': submit && form.UserRole.errors}">
+                        <option *ngFor="let item of userRoles" [value]="item.Id">{{ item.UserRole
+                            }}</option>
+                    </select>
+                    <div *ngIf="submit && form.UserRole.errors" class="invalid-feedback">
+                        <span *ngIf="form.UserRole.value==0">Please
+                            provide a valid UserRole.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <label for="FullName">Full Name:</label>
+                    <input type="text" class="form-control" id="FullName" formControlName="FullName"
+                        [ngClass]="{'is-invalid': submit && form.FullName.errors}">
+                    <div *ngIf="submit && form.FullName.errors" class="invalid-feedback">
+                        <span *ngIf="form.FullName.errors.required">Please
+                            provide a valid Full Name.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <label for="Email">Email:</label>
+                    <input type="text" class="form-control" id="Email" formControlName="Email"
+                        [ngClass]="{'is-invalid': submit && form.Email.errors}">
+                    <div *ngIf="submit && form.Email.errors" class="invalid-feedback">
+                        <span *ngIf="form.Email.errors.required">Please
+                            provide a valid
+                            email.</span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label for="PhoneNumber">Phone Number:</label>
+                    <input type="text" class="form-control" id="PhoneNumber" formControlName="PhoneNumber"
+                        [ngClass]="{'is-invalid': submit && form.PhoneNumber.errors}">
+                    <div *ngIf="submit && form.PhoneNumber.errors" class="invalid-feedback">
+                        <span *ngIf="form.PhoneNumber.errors.required">Please
+                            provide a valid
+                            PhoneNumber.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger waves-effect" data-bs-dismiss="modal"
+                (click)="hideModal()">Close</button>
+            <button class="btn btn-primary waves-effect waves-light" type="submit" class="btn btn-primary w-md"
+                [disabled]="loading">Submit</button>
+        </div>
+    </form>
+</ng-template>
+<ngx-loading [show]="loading"></ngx-loading>

@@ -1,0 +1,439 @@
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <app-page-title title="Create Order" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card">
+                <div class="card-body">
+                    <form class="needs-validation" [formGroup]="form1">
+                        <div class="row mb-3">
+                            <div class="col-lg-8">
+                                <label for="ClientNo">ClientNo:</label>
+                                <dx-drop-down-box [(value)]="gridBoxValue" [(opened)]="isGridBoxOpened" valueExpr="Id"
+                                    [deferRendering]="false" [displayExpr]="gridBox_displayExpr"
+                                    placeholder="Select a value..." [inputAttr]="{ 'aria-label': 'Owner' }"
+                                    [showClearButton]="true" [dataSource]="customersdataSource"
+                                    (onOptionChanged)="onGridBoxOptionChanged($event)">
+                                    <div *dxTemplate="let data of 'content'">
+
+                                        <dx-data-grid id="gridContainer" [dataSource]="customersdataSource" keyExpr="Id"
+                                            [showColumnLines]="true" [hoverStateEnabled]="true"
+                                            [(selectedRowKeys)]="gridBoxValue" height="100%" [showRowLines]="true"
+                                            [showBorders]="true" [rowAlternationEnabled]="true">
+                                            <dxo-search-panel [visible]="true" [width]="250"
+                                                placeholder="Search..."></dxo-search-panel>
+                                            <dxo-scrolling rowRenderingMode="virtual">
+                                            </dxo-scrolling>
+                                            <dxo-paging [enabled]="true" [pageSize]="10"></dxo-paging>
+                                            <dxo-selection mode="single"></dxo-selection>
+                                            <dxo-filter-row [visible]="true"></dxo-filter-row>
+                                            <dxi-column dataField="Id" [width]="60"></dxi-column>
+                                            <dxi-column dataField="FullName"></dxi-column>
+                                            <dxi-column dataField="Location" [width]="100"
+                                                [hidingPriority]="2"></dxi-column>
+                                            <dxi-column dataField="MobileNo" [width]="100"
+                                                [hidingPriority]="1"></dxi-column>
+                                            <dxi-column dataField="Email" [width]="100"
+                                                [hidingPriority]="0"></dxi-column>
+                                        </dx-data-grid>
+
+                                    </div>
+                                </dx-drop-down-box>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <label>Date:</label>
+                                <div class="input-group clockpicker">
+                                    <input bsDatepicker class="form-control" autoClose="true" formControlName="date"
+                                        placeholder="yyyy-mm-dd"
+                                        [ngClass]="{'is-invalid': mainformsubmit && mainform.date.errors}"
+                                        (ngModelChange)="onDateChange($event)">
+                                    <div *ngIf="mainformsubmit && mainform.date.errors" class="invalid-feedback">
+                                        <span *ngIf="mainform.date.errors.required">Please provide a valid
+                                            Date.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <tabset [vertical]="true" class="nav-pills flex-column ecommerce-checkout-tab">
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="bx bxs-truck d-block check-nav-icon mt-4 mb-2"></i>
+                        <p class="fw-bold mb-4">Clothes Info</p>
+                    </ng-template>
+                    <form class="needs-validation" [formGroup]="clothesform">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="tab-content" id="v-pills-tabContent">
+                                    <div class="tab-pane fade show active" id="v-pills-shipping" role="tabpanel"
+                                        aria-labelledby="v-pills-shipping-tab">
+                                        <div class="row">
+                                            <h4 class="card-title">Clothes information</h4>
+                                            <div class="col-lg-8">
+                                                <div class="card">
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-lg-6">
+                                                                <label for="Category">Category:</label><span
+                                                                    style="color: red;">*</span>
+                                                                <ng-select [items]="CategoriesSource" bindLabel="Name"
+                                                                    bindValue="Id" formControlName="Category"
+                                                                    [ngClass]="{'ng-invalid': submit && form.Category.errors}"
+                                                                    (change)="onCategoriesChange($event)">
+                                                                </ng-select>
+                                                                <div *ngIf="submit && form.Category.errors"
+                                                                    class="invalid-feedback">
+                                                                    <span *ngIf="form.Category.errors.required">Please
+                                                                        provide a
+                                                                        valid
+                                                                        Category.</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <label for="SubCategory">Sub-Category:</label><span
+                                                                    style="color: red;">*</span>
+                                                                <ng-select [items]="SubCategoriesSource"
+                                                                    bindLabel="FabricType" bindValue="Id"
+                                                                    formControlName="SubCategory"
+                                                                    (change)="onSubCategoriesChange($event)">
+                                                                </ng-select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-lg-6">
+                                                                <label for="ClothesCount">No. of Clothes:</label>
+                                                                <input type="text" formControlName="ClothesCount"
+                                                                    id="ClothesCount" class="form-control"
+                                                                    [ngClass]="{'is-invalid': submit && form.ClothesCount.errors}">
+                                                                <div *ngIf="submit && form.ClothesCount.errors"
+                                                                    class="invalid-feedback">
+                                                                    <span
+                                                                        *ngIf="form.ClothesCount.errors.required">Please
+                                                                        provide a
+                                                                        valid
+                                                                        Clothes Count.</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <div class="row mt-4">
+                                                                    <div class="col-12 d-flex justify-content-between align-items-center">
+                                                                        <button type="button" class="btn btn-primary btn-label waves-light" (click)="AddClothes()">
+                                                                            <i class="fas fa-plus label-icon" style="color:white"></i> Add
+                                                                        </button>
+                                                                        <div class="form-check d-flex align-items-center">
+                                                                            <input class="form-control form-check-input" type="checkbox" id="priceByKGS" formControlName="priceByKGS" (change)="onCheckboxChange($event)">
+                                                                            <label class="form-check-label ms-2" for="priceByKGS">
+                                                                                Price By Kgs
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>                                                            
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="table-responsive mb-0">
+                                                                <table
+                                                                    class="table align-middle table-nowrap dt-responsive nowrap w-100"
+                                                                    id="order-list">
+                                                                    <thead class="table-light">
+                                                                        <tr>
+                                                                            <th class="align-middle">Id</th>
+                                                                            <th class="align-middle">Category</th>
+                                                                            <th class="align-middle">SubCategory</th>
+                                                                            <th class="align-middle">Count</th>
+                                                                            <th *ngIf="!hidePriceColumn"
+                                                                                class="align-middle">Price</th>
+                                                                            <th class="align-middle">Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr *ngFor="let item of clothes; let i = index">
+                                                                            <!-- Define index variable 'i' -->
+                                                                            <td>{{item.Id}}</td>
+                                                                            <td>{{ item.Category }}</td>
+                                                                            <td>{{ item.SubCategory }}</td>
+                                                                            <td>{{ item.Count }}</td>
+                                                                            <td *ngIf="!hidePriceColumn">{{ item.Price
+                                                                                }}</td>
+                                                                            <td>
+                                                                                <div class="d-flex gap-3">
+                                                                                    <a href="javascript:void(0);"
+                                                                                        class="text-danger"
+                                                                                        (click)="deleteItem(item.Id)">
+                                                                                        <i
+                                                                                            class="mdi mdi-delete font-size-15"></i>
+                                                                                    </a>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-4">
+                                                <div class="card">
+                                                    <div class="card-header bg-transparent border-bottom ">
+                                                        Clothes Total/Summary
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <div class="row">
+                                                            <div class="col-lg-12">
+                                                                <label for="Email">Total Clothes Count:<h3>
+                                                                        {{TotalClothes}}</h3>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-lg-6" *ngIf="hidePriceColumn">
+                                                                <label for="TotalKgs">Total Kgs:</label>
+                                                                <input type="text" formControlName="TotalKgs"
+                                                                    id="TotalKgs" [value]="TotalKgs" (input)="onKgsChange($event)"
+                                                                    class="form-control">
+                                                            </div>
+                                                            <div class="col-lg-6">
+                                                                <label for="Amount">Amount(Ksh):</label>
+                                                                <input type="text" formControlName="Amount" id="Amount"
+                                                                    [value]="ClothesTotalAmount" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </tab>
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="bx bx-money d-block check-nav-icon mt-4 mb-2"></i>
+                        <p class="fw-bold mb-4">Other Service</p>
+                    </ng-template>
+                    <form class="needs-validation" [formGroup]="servicesform">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Service information</h4>
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row mb-3">
+                                                    <div class="col-lg-6">
+                                                        <label for="ServiceCategoryName">Category:</label><span
+                                                            style="color: red;">*</span>
+                                                        <ng-select [items]="ServiceCategoriesSource" bindLabel="Name"
+                                                            bindValue="Id" formControlName="ServiceCategoryName"
+                                                            id="ServiceCategoryName"
+                                                            [ngClass]="{'ng-invalid': submitServices && form2.ServiceCategoryName.errors}"
+                                                            (change)="onServiceCategoryChange($event)">
+                                                        </ng-select>
+                                                        <div *ngIf="submitServices && form2.ServiceCategoryName.errors"
+                                                            class="invalid-feedback">
+                                                            <span
+                                                                *ngIf="form2.ServiceCategoryName.errors.required">Please
+                                                                provide a
+                                                                valid
+                                                                Category.</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <label for="ServiceSubCategoryName">Sub-Category:</label><span
+                                                            style="color: red;">*</span>
+                                                        <ng-select [items]="ServicesSubCategoriesSource"
+                                                            bindLabel="Title" bindValue="Id"
+                                                            formControlName="ServiceSubCategoryName"
+                                                            id="ServiceSubCategoryName"
+                                                            (change)="onServiceSubCategoriesChange($event)">
+                                                        </ng-select>
+                                                    </div>
+                                                    <div class="col-lg-6">
+                                                        <label for="ServicesCount">Count:</label>
+                                                        <input type="text" formControlName="ServicesCount"
+                                                            id="ServicesCount" class="form-control"
+                                                            [ngClass]="{'is-invalid': submitServices && form2.ServicesCount.errors}">
+                                                        <div *ngIf="submitServices && form2.ServicesCount.errors"
+                                                            class="invalid-feedback">
+                                                            <span *ngIf="form2.ServicesCount.errors.required">Please
+                                                                provide a
+                                                                valid
+                                                                Clothes Count.</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-6 mt-4">
+                                                        <button type="button"
+                                                            class="btn btn-primary btn-label waves-light"
+                                                            (click)="AddService()"><i class="fas fa-plus label-icon"
+                                                                style="color:white"></i> Add</button>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="table-responsive mb-0">
+                                                        <table
+                                                            class="table align-middle table-nowrap dt-responsive nowrap w-100"
+                                                            id="order-list">
+                                                            <thead class="table-light">
+                                                                <tr>
+                                                                    <th class="align-middle">Id</th>
+                                                                    <th class="align-middle">Category</th>
+                                                                    <th class="align-middle">SubCategory</th>
+                                                                    <th class="align-middle">Count</th>
+                                                                    <th class="align-middle">Price</th>
+                                                                    <th class="align-middle">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr *ngFor="let item of Services; let i = index">
+                                                                    <!-- Define index variable 'i' -->
+                                                                    <td>{{item.Id}}</td>
+                                                                    <td>{{ item.Category }}</td>
+                                                                    <td>{{ item.SubCategory }}</td>
+                                                                    <td>{{ item.Count }}</td>
+                                                                    <td>{{ item.Price }}</td>
+                                                                    <td>
+                                                                        <div class="d-flex gap-3">
+                                                                            <a href="javascript:void(0);"
+                                                                                class="text-danger"
+                                                                                (click)="deleteService(item.Id)">
+                                                                                <i
+                                                                                    class="mdi mdi-delete font-size-15"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </td>
+                                                                </tr>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="card">
+                                            <div class="card-header bg-transparent border-bottom ">
+                                                Services Total/Summary
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-lg-12">
+                                                        <label for="Email">Total Services Count:<h3>
+                                                                {{TotalServices}}</h3>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-lg-6">
+                                                        <label for="Amount">Total Amount(Ksh):</label>
+                                                        <input type="text" (input)="onServiceTotal($event)"
+                                                            formControlName="ServicesAmount"
+                                                            [value]="totalservicesAmount" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </tab>
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="bx bx-badge-check d-block check-nav-icon mt-4 mb-2"></i>
+                        <p class="fw-bold mb-4">Confirmation</p>
+                    </ng-template>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card shadow-none border mb-0">
+                                <div class="card-body">
+                                    <h4 class="card-title mb-4">Order Summary</h4>
+
+                                    <div class="table-responsive">
+                                        <table class="table align-middle mb-0 table-nowrap">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th scope="col">Order Type</th>
+                                                    <th scope="col">Quantity</th>
+                                                    <th scope="col">Amount</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr *ngFor="let item of OrderDetails; let i = index">
+                                                    <th scope="row">{{item.Type}}
+                                                    </th>
+                                                    <td>
+                                                        <h5 class="font-size-14 text-truncate"><a
+                                                                routerLink="/ecommerce/product-detail"
+                                                                class="text-dark">{{item.Quantity}}</a>
+                                                        </h5>
+                                                        <p class="text-muted mb-0">Item/s</p>
+                                                    </td>
+                                                    <td>Ksh {{item.Amount}}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <h6 class="m-0">Sub Total:</h6>
+                                                    </td>
+                                                    <td>
+                                                        {{calculateGrandTotal('Amount')}}
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <div class="bg-primary-subtle p-3 rounded">
+                                                            <h5 class="font-size-14 text-primary mb-0"><i
+                                                                    class="fas fa-shipping-fast me-2"></i>
+                                                                Shipping
+                                                                <span class="float-end">Free</span>
+                                                            </h5>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="2">
+                                                        <h6 class="m-0">Total:</h6>
+                                                    </td>
+                                                    <td>
+                                                        <h6>{{calculateGrandTotal('Amount')}}</h6>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                    <div class="col-lg-5 mt-4" >
+                                        <button type="button" class="btn btn-primary btn-label waves-light"
+                                            (click)="CalculateTotal()"><i class="fas fa-plus label-icon"
+                                                style="color:white"></i> Calculate Total</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-sm-8"></div>
+                        <div class="col-sm-4">
+                            <div class="text-sm-end">
+                                <button type="button" class="btn btn-primary btn-label waves-light"
+                                    (click)="saveOrder()"><i class="fas fa-plus label-icon" style="color:white"></i>
+                                    Save Order</button>
+                            </div>
+                        </div> <!-- end col -->
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div>
+<ngx-loading [show]="loading"></ngx-loading>

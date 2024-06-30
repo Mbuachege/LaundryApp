@@ -1,0 +1,72 @@
+<div class="container-fluid">
+
+    <!-- start page title -->
+    <app-page-title title="Expenditure Categories" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+    <!-- end page title -->
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form class="needs-validation" [formGroup]="categoryForm" (ngSubmit)="validSubmit()">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label for="Categoryname">Category Name</label>
+                                    <input id="Categoryname" name="Categoryname" type="text" placeholder="Category name"
+                                        class="form-control" formControlName="Categoryname"
+                                        [ngClass]="{'is-invalid': submit && form.Categoryname.errors}">
+                                    <div *ngIf="submit && form.Categoryname.errors" class="invalid-feedback">
+                                        <span *ngIf="form.Categoryname.errors.required">Category Name is
+                                            required.</span>
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <div class="d-flex flex-wrap gap-2 mt-2">
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row">
+                        <div class="col-sm-9">
+                            <!-- Table data -->
+
+                            <dx-data-grid id="gridContainer" #grid [dataSource]="dataSource" keyExpr="Id"
+                                [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
+                                [rowAlternationEnabled]="true">
+                                <dxo-filter-row [visible]="true"></dxo-filter-row>
+
+                                <dxo-search-panel [visible]="true" [width]="300"
+                                    placeholder="Search..."></dxo-search-panel>
+                                <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+                                <dxo-paging [pageSize]="10"> </dxo-paging>
+                                <dxo-pager [visible]="true" [allowedPageSizes]="[10,20,30,40,50]" [displayMode]="'full'"
+                                    [showPageSizeSelector]="true" [showInfo]="true" [showNavigationButtons]="true">
+                                </dxo-pager>
+                                <dxi-column dataField="Id" [width]="100"></dxi-column>
+                                <dxi-column dataField="Name" caption="Category Name"></dxi-column>
+                                <dxi-column dataField="CreatedBy" [width]="150"></dxi-column>
+                                <dxi-column dataField="DateCreated" [width]="150" [hidingPriority]="0"></dxi-column>
+                                <dxi-column [width]="120" [allowFiltering]="false" [allowSorting]="false"
+                                    cellTemplate="actions" caption="Actions"></dxi-column>
+                                <div *dxTemplate="let data of 'actions'" class="d-flex flex-wrap gap-1">
+                                    <button type="button" class="gridbutton" title="Edit"
+                                        (click)="Edit(data.data)">
+                                        <i class="bx bx-edit" style="color:#3256a8"></i>
+                                    </button>
+                                    <button type="button" class="gridbutton" title="Delete" (click)="Delete(data.data)">
+                                        <i class="bx bx-trash" style="color: red"></i>
+                                    </button>
+                                </div>
+                            </dx-data-grid>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ngx-loading [show]="loading"></ngx-loading>

@@ -1,0 +1,21 @@
+<dx-data-grid [showColumnLines]="true" [showRowLines]="true" [dataSource]="dataSource" [showBorders]="true" [rowAlternationEnabled]="true"
+    [columnAutoWidth]="true" keyExpr="Id">
+    <dxi-column dataField="Id" [width]="100" ></dxi-column>
+    <dxi-column dataField="Category" caption="Type"></dxi-column>
+    <dxi-column dataField="CategoryName"></dxi-column>
+    <dxi-column dataField="SubCategoryTitle"></dxi-column>
+    <dxi-column dataField="Quantity" [hidingPriority]="3"></dxi-column>
+    <dxi-column dataField="DateCreated" [hidingPriority]="1"></dxi-column>
+    <dxi-column dataField="CreatedBy" [hidingPriority]="0"></dxi-column>
+    <dxi-column [width]="100" [allowFiltering]="false" [allowSorting]="false" cellTemplate="actions"
+        caption="Actions"></dxi-column>
+    <div *dxTemplate="let data of 'actions'" [width]="80">
+        <button  type="button"class="gridbutton" title="Edit" (click)="edit(data.data)">
+            <i class="bx bx-edit" style="color:#3256a8"></i>
+        </button>
+        <button type="button" class="gridbutton" title="Delete" (click)="delete(data.data)">
+            <i class="bx bx-trash" style="color: red"></i>
+        </button>
+    </div>
+</dx-data-grid>
+<ngx-loading [show]="loading"></ngx-loading>

@@ -1,0 +1,98 @@
+<div class="container-fluid">
+    <app-page-title title="Customers" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+
+    <div class="col-auto">
+        <button class="btn btn-primary btn-label waves-light" (click)="centerModal(centerDataModal)"><i
+                class="fas fa-plus label-icon" style="color:white"></i> Add Customer</button>
+    </div>
+    <div class="row">
+        <dx-data-grid id="gridContainer" #grid [dataSource]="dataSource" keyExpr="Id" [showColumnLines]="true"
+            [showRowLines]="true" [showBorders]="true" [rowAlternationEnabled]="true">
+            <dxo-filter-row [visible]="true"></dxo-filter-row>
+            <dxo-selection mode="single"></dxo-selection>
+            <dxo-search-panel [visible]="true" [width]="300" placeholder="Search..."></dxo-search-panel>
+            <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+            <dxo-paging [pageSize]="10"> </dxo-paging>
+            <dxo-pager [visible]="true" [allowedPageSizes]="[10,20,30,40,50]" [displayMode]="'full'"
+                [showPageSizeSelector]="true" [showInfo]="true" [showNavigationButtons]="true">
+            </dxo-pager>
+            <dxi-column dataField="Id" [width]="70"></dxi-column>
+            <dxi-column dataField="FullName"></dxi-column>
+            <dxi-column dataField="MobileNo" [width]="130"></dxi-column>
+            <dxi-column dataField="Email" [width]="170"></dxi-column>
+            <dxi-column dataField="Location" [width]="150"></dxi-column>
+            <dxi-column dataField="DateCreated" [hidingPriority]="1"></dxi-column>
+            <dxi-column dataField="CreatedBy" [hidingPriority]="0"></dxi-column>
+            <dxi-column [width]="100" [allowFiltering]="false" [allowSorting]="false"
+                cellTemplate="actions"></dxi-column>
+            <div *dxTemplate="let data of 'actions'">
+                <button class="gridbutton" title="Edit" (click)="editcustomer(data.data)">
+                    <i class="bx bx-edit" style="color:#3256a8"></i>
+                </button>
+                <button class="gridbutton" title="Delete" (click)="Delete(data.data)">
+                    <i class="bx bx-trash" style="color: red"></i>
+                </button>
+            </div>
+        </dx-data-grid>
+    </div>
+    <ng-template #centerDataModal class="modal fade modal-lg" tabindex="-1">
+        <div class="modal-header">
+            <h5 class="modal-title">Customers Entry</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                (click)="hideModal()"></button>
+        </div>
+        <form class="needs-validation" (ngSubmit)="validSubmit()" [formGroup]="validationform">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <label for="ModuleId">Full Name:</label><span style="color: red;">*</span>
+                        <input type="text" formControlName="FullName" class="form-control"
+                            [ngClass]="{'is-invalid': submit && form.FullName.errors}">
+                        <div *ngIf="submit && form.FullName.errors" class="invalid-feedback">
+                            <span *ngIf="form.FullName.errors.required">Please provide a valid
+                                FullName.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <label for="PhoneNumber">Phone Number:</label><span style="color: red;">*</span>
+                        <input type="text" formControlName="PhoneNumber" class="form-control"
+                            [ngClass]="{'is-invalid': submit && form.PhoneNumber.errors}">
+                        <div *ngIf="submit && form.PhoneNumber.errors" class="invalid-feedback">
+                            <span *ngIf="form.PhoneNumber.errors.required">Please provide a valid
+                                PhoneNumber.</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="Email">Email:</label>
+                        <input type="text" formControlName="Email" class="form-control"
+                            [ngClass]="{'is-invalid': submit && form.Email.errors}">
+                        <div *ngIf="submit && form.Email.errors" class="invalid-feedback">
+                            <span *ngIf="form.Email.errors.required">Please provide a valid
+                                Email.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <label for="Address">Location:</label>
+                        <input type="text" formControlName="Location" class="form-control"
+                            [ngClass]="{'is-invalid': submit && form.Location.errors}">
+                        <div *ngIf="submit && form.Location.errors" class="invalid-feedback">
+                            <span *ngIf="form.Location.errors.required">Please provide a valid
+                                Location.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger waves-effect" data-bs-dismiss="modal"
+                    (click)="hideModal()">Close</button>
+                <button class="btn btn-primary waves-effect waves-light" type="submit" class="btn btn-primary w-md"
+                    [disabled]="loading">Submit</button>
+            </div>
+        </form>
+    </ng-template>
+    <ngx-loading [show]="loading"></ngx-loading>
+</div>

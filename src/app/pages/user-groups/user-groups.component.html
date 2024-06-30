@@ -1,0 +1,99 @@
+<div class="container-fluid">
+  <app-page-title title="User-Groups" [breadcrumbItems]="breadCrumbItems"></app-page-title>
+  <div class="col-auto">
+    <button class="btn btn-primary btn-label waves-light" (click)="userGroupModal(userGroupDataModal)"><i
+        class="fas fa-plus label-icon" style="color:white"></i> Add User-Group</button>
+  </div>
+  <div class="row">
+    <dx-data-grid id="gridContainer" #grid [dataSource]="dataSource" keyExpr="Id" [showColumnLines]="true"
+      [showRowLines]="true" [showBorders]="true" [rowAlternationEnabled]="true"
+      (onSelectionChanged)="LoaduserGroupDetails($event)">
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxo-selection mode="single"></dxo-selection>
+      <dxo-search-panel [visible]="true" [width]="300" placeholder="Search..."></dxo-search-panel>
+      <dxo-scrolling rowRenderingMode="virtual"> </dxo-scrolling>
+      <dxo-paging [pageSize]="10"> </dxo-paging>
+      <dxo-pager [visible]="true" [allowedPageSizes]="[10,20,30,40,50]" [displayMode]="'full'"
+        [showPageSizeSelector]="true" [showInfo]="true" [showNavigationButtons]="true">
+      </dxo-pager>
+      <dxi-column dataField="Id" [width]="100"></dxi-column>
+      <dxi-column dataField="Name"></dxi-column>
+      <dxi-column dataField="DateCreated"></dxi-column>
+      <dxi-column dataField="CreatedBy"></dxi-column>
+      <dxo-master-detail [enabled]="false" template="detail"></dxo-master-detail>
+      <dxi-column [width]="100" [allowFiltering]="false" [allowSorting]="false" cellTemplate="actions"></dxi-column>
+      <div *dxTemplate="let data of 'actions'">
+        <button class="gridbutton" title="Add Group-Role" (click)="addGroupRoles(data.data)">
+          <i class="bx bxs-add-to-queue" style="color:#3256a8"></i>
+        </button>
+        <button class="gridbutton" title="Edit" (click)="editGroupRole(data.data)">
+          <i class="bx bx-edit" style="color:#3256a8"></i>
+        </button>
+        <button class="gridbutton" title="Delete" (click)="Delete(data.data)">
+          <i class="bx bx-trash" style="color: red"></i>
+        </button>
+      </div>
+      <div *dxTemplate="let module of 'detail'">
+        <app-usergrouproles [data]="subcountiesSource" [key]="module.key" [key]="module.key"></app-usergrouproles>
+      </div>
+    </dx-data-grid>
+  </div>
+</div>
+<ng-template #userGroupDataModal class="modal fade modal-lg" tabindex="-1">
+  <div class="modal-header">
+    <h5 class="modal-title">User-Group Entry</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+      (click)="modalRef?.hide()"></button>
+  </div>
+  <form class="needs-validation" (ngSubmit)="submitusergroup()" [formGroup]="userGroupform">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-9">
+          <label for="Name">Name:</label><span style="color: red;">*</span>
+          <input type="text" formControlName="Name" class="form-control"
+            [ngClass]="{'is-invalid': submitgroup && form2.Name.errors}">
+          <div *ngIf="submitgroup && form2.Name.errors" class="invalid-feedback">
+            <span *ngIf="form2.Name.errors.required">Please provide a valid
+              Name.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger waves-effect" data-bs-dismiss="modal"
+          (click)="hideModal2()">Close</button>
+        <button class="btn btn-primary waves-effect waves-light" type="submit" class="btn btn-primary w-md"
+          [disabled]="loading">Submit</button>
+      </div>
+
+  </form>
+</ng-template>
+<ng-template #centerDataModal class="modal fade modal-lg" tabindex="-1">
+  <div class="modal-header">
+    <h5 class="modal-title">UserGroup Roles Entry</h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+      (click)="modalRef?.hide()"></button>
+  </div>
+  <form class="needs-validation" (ngSubmit)="validSubmit()" [formGroup]="validationform">
+    <div class="modal-body">
+      <div class="row">
+        <div class="col-lg-12">
+          <label for="UserRoleId">UserRole:</label>
+          <ng-select [items]="usersRoles" bindLabel="UserRole" bindValue="Id" formControlName="UserRoleId"
+            [ngClass]="{'ng-invalid': submit && form.UserRoleId.errors}">
+          </ng-select>
+          <div *ngIf="submit && form.UserRoleId.errors" class="invalid-feedback">
+            <span *ngIf="form.UserRoleId.errors.required">Please provide a valid UserRoleId.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger waves-effect" data-bs-dismiss="modal"
+        (click)="hideModal()">Close</button>
+      <button class="btn btn-primary waves-effect waves-light" type="submit" class="btn btn-primary w-md"
+        [disabled]="loading">Submit</button>
+    </div>
+  </form>
+</ng-template>
+<ngx-loading [show]="loading"></ngx-loading>
